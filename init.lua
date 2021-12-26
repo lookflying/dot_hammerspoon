@@ -106,6 +106,34 @@ hs.hotkey.bind({"cmd", "shift", "ctrl"}, "f", function()
     win:setFrame(f)
 end)
 
+hs.hotkey.bind({"cmd", "shift", "ctrl"}, "t", function()
+    local win = hs.window.frontmostWindow()
+    local f = win:frame()
+    local screen = win:screen()
+    local max = screen:frame()
+    local screens_info = ""
+    local all_screens = hs.screen.allScreens()
+    local min_x = 0
+    local min_y = 0
+    for i = 1, #all_screens do
+        v = all_screens[i]
+        screens_info = screens_info.." x = "..v:frame().x.." y = "..v:frame().y.." w = "..v:frame().w.." h = "..v:frame().h.."\n"
+        if v:frame().x < min_x then
+            min_x = v:frame().x
+        end
+        if v:frame().y < min_y then
+            min_y = v:frame().y
+        end
+    end
+    f.x = min_x
+    f.y = min_y
+    f.w = 2560
+    f.h = 1440 * 2
+    hs.notify.new({title="screens", informativeText=screens_info}):send()
+    win:moveToUnit(hs.geometry.rect(min_x, min_y, 2560, 2880))
+
+end)
+
 --left to right sort
 function get_sorted_screens()
     local screens = hs.screen.allScreens()
@@ -147,32 +175,32 @@ end
 
 
 hs.hotkey.bind({"cmd", "shift", "ctrl"}, "Right", function()
-    spoon.WinWin:moveToScreen("right")
-    --local win = hs.window.frontmostWindow()
-    --local f = win:frame()
-    --local screen = win:screen()
-    --sorted_screens = get_sorted_screens()
-    --target_screen = hs.fnutils.find(sorted_screens, function(bscreen)
-    --    return bscreen:fullFrame().x > screen:fullFrame().x
-    --end)
-    --if target_screen ~= nil then
-    --    move_window_to_screen(win, target_screen)
-    --end
+    --spoon.WinWin:moveToScreen("right")
+    local win = hs.window.frontmostWindow()
+    local f = win:frame()
+    local screen = win:screen()
+    sorted_screens = get_sorted_screens()
+    target_screen = hs.fnutils.find(sorted_screens, function(bscreen)
+        return bscreen:fullFrame().x > screen:fullFrame().x
+    end)
+    if target_screen ~= nil then
+        move_window_to_screen(win, target_screen)
+    end
     --hs.notify.new({title="test", informativeText="x="..f.x.."y="..f.y.."screen x="..screen:fullFrame().x.."screen y="..screen:fullFrame().y}):send()
 end)
 
 hs.hotkey.bind({"cmd", "shift", "ctrl"}, "Left", function()
-    spoon.WinWin:moveToScreen("left")
-    --local win = hs.window.frontmostWindow()
-    --local f = win:frame()
-    --local screen = win:screen()
-    --sorted_screens = get_reversed_sorted_screens()
-    --target_screen = hs.fnutils.find(sorted_screens, function(bscreen)
-    --    return bscreen:fullFrame().x < screen:fullFrame().x
-    --end)
-    --if target_screen ~= nil then
-    --    move_window_to_screen(win, target_screen)
-    --end
+    --spoon.WinWin:moveToScreen("left")
+    local win = hs.window.frontmostWindow()
+    local f = win:frame()
+    local screen = win:screen()
+    sorted_screens = get_reversed_sorted_screens()
+    target_screen = hs.fnutils.find(sorted_screens, function(bscreen)
+        return bscreen:fullFrame().x < screen:fullFrame().x
+    end)
+    if target_screen ~= nil then
+        move_window_to_screen(win, target_screen)
+    end
 end)
 
 hs.hotkey.bind({"cmd", "shift", "ctrl"}, "up", function()
